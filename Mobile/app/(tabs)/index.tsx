@@ -25,59 +25,72 @@ export default function ConcertScreen() {
     queryFn: getConcert,
   });
 
-  // console.log("data", concert);
-  // console.log("loading:", isLoading);`
-  // console.log("error:", error);
-  console.log("data:", concert);
-  // console.log("API:", API_BASE);
-  // console.log("IMAGE URL:", concert?.imageUrl);
+  if (concert) {
+    console.log("FINAL DATA:", concert);
+  }
 
+  // ✅ FIX 1: ONLY isLoading
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1 bg-black justify-center items-center">
-        <ActivityIndicator size={"large"} color={"#fff"} />
+        <ActivityIndicator size="large" color="#fff" />
       </SafeAreaView>
     );
   }
 
+  // ✅ FIX 2: ERROR
   if (error) {
     return (
       <SafeAreaView className="flex-1 bg-black justify-center items-center">
-        <Text>Error Loading Concert : {error.message}</Text>
+        <Text style={{ color: "white" }}>Error: {error.message}</Text>
       </SafeAreaView>
     );
   }
 
+  // ✅ FIX 3: NO DATA
+  if (!concert) {
+    return (
+      <SafeAreaView className="flex-1 bg-black justify-center items-center">
+        <Text style={{ color: "white" }}>No Data</Text>
+      </SafeAreaView>
+    );
+  }
+
+  // 🔥 SAFE DATA
   const minPrice =
-    concert?.categories && concert.categories.length > 0
-      ? Math.min(
-          ...concert.categories.map((cat: { price: number }) => cat.price),
-        )
+    Array.isArray(concert.categories) && concert.categories.length > 0
+      ? Math.min(...concert.categories.map((cat: any) => cat?.price || 0))
       : 0;
 
-  const formatedDate = new Date(concert.date).toLocaleString("en-US", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  });
+  const formatedDate = concert?.date
+    ? new Date(concert.date).toLocaleString("en-US", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+      })
+    : "";
 
-  const formattedTime = new Date(concert.date)
-    .toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    })
-    .toUpperCase();
+  const formattedTime = concert?.date
+    ? new Date(concert.date)
+        .toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        })
+        .toUpperCase()
+    : "";
 
-  const gatesOpen = new Date(concert.gatesOpenTime)
-    .toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    })
-    .toUpperCase();
+  const gatesOpen = concert?.gatesOpenTime
+    ? new Date(concert.gatesOpenTime)
+        .toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        })
+        .toUpperCase()
+    : "";
 
-  const languagesDisplay = concert.languages
+  const languagesDisplay = concert?.languages
     ? `Event will be in ${concert.languages.split(",").join(" & ")}`
     : "";
 

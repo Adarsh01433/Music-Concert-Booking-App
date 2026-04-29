@@ -1,3 +1,3 @@
-const SINGLE_CONCERT_ID = "69d158286a8ef3c2c4dae7b8"
+const SINGLE_CONCERT_ID = "69d223bfc6af79e384f2ec73"
 
 module.exports= {SINGLE_CONCERT_ID}

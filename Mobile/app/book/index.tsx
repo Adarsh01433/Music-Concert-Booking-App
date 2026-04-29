@@ -1,14 +1,14 @@
-   import { getConcert } from "@/api/concertApi";
+import { getConcert } from "@/api/concertApi";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import {
-    ActivityIndicator,
-    Dimensions,
-    Pressable,
-    ScrollView,
-    Text,
-    View,
+  ActivityIndicator,
+  Dimensions,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -24,9 +24,11 @@ const COLOR_MAP: Record<string, { color: string; border: string }> = {
 export default function BookConcertScreen() {
   const router = useRouter();
 
-  const {data: concert,isLoading,error} = useQuery({ queryKey: ["concert"],
-    queryFn: getConcert,
-  });
+  const {
+    data: concert,
+    isLoading,
+    error,
+  } = useQuery({ queryKey: ["concert"], queryFn: getConcert });
 
   if (isLoading) {
     return (
@@ -105,34 +107,58 @@ export default function BookConcertScreen() {
           </View>
         </View>
 
-        <View>{concert?.categories?.map((cat:{id : string; name : string; price : number})=> {
-          const colors = COLOR_MAP[cat.name.toLowerCase()] || {color : "#EAFCC6", border : "#BFD67D"};
-          return (
-            <Pressable key={cat.id} 
-            style= {{ backgroundColor : colors?.color,
-              borderColor : colors.border,
-              borderWidth : 3,
-              width : width - 40,
-            }}
-            className="rounded-xl px-4 py-6 mx-auto w-11/12 justify-center items-center">
-              <Text className="text-center font-bold text-lg ">{cat.name?.toUpperCase()}</Text>
-              <Text className="text-center text-sm mt-1" style = {{color : "#2b2b2b"}}>
-                ${cat.price.toLocaleString()} onwards
-              </Text>
-            </Pressable>
-          )
-        })}</View>
+        <View>
+          {concert?.categories?.map(
+            (cat: { id: string; name: string; price: number }) => {
+              const colors = COLOR_MAP[cat.name.toLowerCase()] || {
+                color: "#EAFCC6",
+                border: "#BFD67D",
+              };
+              return (
+                <Pressable
+                  key={cat.id}
+                  style={{
+                    backgroundColor: colors?.color,
+                    borderColor: colors.border,
+                    borderWidth: 3,
+                    width: width - 40,
+                  }}
+                  className="rounded-xl px-4 py-6 mx-auto w-11/12 justify-center items-center"
+                >
+                  <Text className="text-center font-bold text-lg ">
+                    {cat.name?.toUpperCase()}
+                  </Text>
+                  <Text
+                    className="text-center text-sm mt-1"
+                    style={{ color: "#2b2b2b" }}
+                  >
+                    ${cat.price.toLocaleString()} onwards
+                  </Text>
+                </Pressable>
+              );
+            },
+          )}
+        </View>
 
         <View className="items-center mb-8">
-          <Text className="text-gray-400 font-semibold">ALL THE SECTIONS ARE STANDING</Text>
+          <Text className="text-gray-400 font-semibold">
+            ALL THE SECTIONS ARE STANDING
+          </Text>
         </View>
 
         <View className="mt-4 mb-12 px-4">
           <View className="flex-row items-center">
-            <View className="w-6 h-6 rounded-md mr-3" style = {{borderWidth : 2, borderColor: "#3a3a3a",
-              backgroundColor : "transparent"
-            }}/>
-            <Text className="text-gray-400">Sold out/Unavilable stands are marked as grey</Text>
+            <View
+              className="w-6 h-6 rounded-md mr-3"
+              style={{
+                borderWidth: 2,
+                borderColor: "#3a3a3a",
+                backgroundColor: "transparent",
+              }}
+            />
+            <Text className="text-gray-400">
+              Sold out/Unavilable stands are marked as grey
+            </Text>
           </View>
         </View>
       </ScrollView>
